@@ -27,19 +27,22 @@ public class ZombieEnemy_DamageReceiver : MonoBehaviour
 
     public void Gethit(float damage)
     {
-        //Take dmg
-        currentHealth -= damage;
-
-        animator.SetTrigger("TakeDamage");
-
-        //Play audio 
-        audio.PlayOneShot(audio.clip);
-
-        //Check if dead 
-        if (currentHealth <= 0)
+        if (!dead)
         {
-            Die();
-        } 
+            //Take dmg
+            currentHealth -= damage;
+
+            animator.SetTrigger("TakeDamage");
+
+            //Play audio 
+            audio.PlayOneShot(audio.clip);
+
+            //Check if dead 
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+        }
     }
 
     public void Die()

@@ -6,26 +6,20 @@ public class RoundController : MonoBehaviour
 {
     public RoundMenu roundMenu;
     public GameController gameController;
+    public bool betweenRounds = false;
 
-    private int currentRound;
+    private int currentRound = 1;
     public int CurrentRound { get { return currentRound; } }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public void NextRound()
     {
-        roundMenu.Pause();
+        StartCoroutine(NewRoundDelay());
+    }
+
+    public IEnumerator NewRoundDelay()
+    {
+        betweenRounds = true;
+        yield return new WaitForSeconds(5f);
         currentRound++;
         gameController.BroadcastMessage("NewRound", currentRound);
     }

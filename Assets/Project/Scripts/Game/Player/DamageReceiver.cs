@@ -20,20 +20,6 @@ public class DamageReceiver : MonoBehaviour
         healthController = GetComponent<HealthController>();
     }
 
-    //Check for collisions
-    void OnTriggerEnter(Collider otherCollider)
-    {
-        if (otherCollider.GetComponent<AmmoCrate>() != null)
-        {
-            Debug.Log("Ammo crate collision");
-            //Ammo crate collision
-            AmmoCrate ammoCrate = otherCollider.GetComponent<AmmoCrate>();
-            player.currentTotalAmmo += ammoCrate.ammo;
-
-            Destroy(ammoCrate.gameObject);
-        }
-    }
-
     public void GetHit(float damage)
     {
         if (isHit == false)
@@ -47,8 +33,6 @@ public class DamageReceiver : MonoBehaviour
         isHit = true;
         healthController.TakeDamage(damage);
         m_AudioSource.PlayOneShot(m_AudioSource.clip);
-        //Shift camera to feel hit impact
-        
 
         yield return new WaitForSeconds(hitDuration);
 

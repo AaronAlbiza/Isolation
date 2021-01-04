@@ -11,8 +11,9 @@ public class GameController : MonoBehaviour
     public Player player;
     public HealthController healthController;
     public GameObject enemyContainer;
-    public EnemySpawner enemySpawner;
+    public RoundController roundController;
     public RoundMenu roundMenu;
+    public UImanager uiManager;
     public Weapon m4;
     public Weapon m107;
     public Weapon m1911;
@@ -24,19 +25,22 @@ public class GameController : MonoBehaviour
     public Text roundText;
     public Text hudPoints;
 
-    [Header("WeaponMenu")]
-    public Text m4Option;
-    public Text m1911Option;
-    public Text m107Option;
-    public Text weapon4;
-    public Text weaponMenuPoints;
-
-    [Header("UpgradeMenu")]
-    public Text damageUpgradeText;
-    public Text rofUpgradeText;
-    public Text magUpgradeText;
-    public Text healthUpgradeText;
-    public Text upgradeMenuPoints;
+    [Header("UPGRADE MENU TEXTS")]
+    public Text playerPoints;
+    public Text m4_FR_Upgrade_Cost;
+    public Text m4_DMG_Upgrade_Cost;
+    public Text m4_MAG_Upgrade_Cost;
+    public Text m4_RS_Upgrade_Cost;
+    public Text m1911_FR_Upgrade_Cost;
+    public Text m1911_DMG_Upgrade_Cost;
+    public Text m1911_MAG_Upgrade_Cost;
+    public Text m1911_RS_Upgrade_Cost;
+    public Text m107_FR_Upgrade_Cost;
+    public Text m107_DMG_Upgrade_Cost;
+    public Text m107_MAG_Upgrade_Cost;
+    public Text m107_RS_Upgrade_Cost;
+    public Text ammoCost;
+    public Text healthCost;
 
 
     private int displayedMagAmmo;
@@ -47,8 +51,8 @@ public class GameController : MonoBehaviour
     void Start()
     {
         displayedMagAmmo = player.CurrentWeapon.currentMagAmmo;
-        displayedTotalAmmo = player.currentTotalAmmo;
-        ammoText.text = "Ammo: " + player.CurrentWeapon.currentMagAmmo + "/" + player.currentTotalAmmo;
+        displayedTotalAmmo = player.CurrentWeapon.currentTotalAmmo;
+        ammoText.text = "Ammo: " + player.CurrentWeapon.currentMagAmmo + "/" + player.CurrentWeapon.currentTotalAmmo;
     }
 
     // Update is called once per frame
@@ -56,13 +60,12 @@ public class GameController : MonoBehaviour
     {
         if (healthController.currentHealth <= 0)
         {
-            roundMenu.Pause();
+            uiManager.Pause();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
 
-        upgradeMenuPoints.text = "Points: " + player.points;
-        weaponMenuPoints.text = "Points: " + player.points;
         hudPoints.text = "Points: " + player.points;
+        playerPoints.text = "Points: " + player.points;
 
         int aliveEnemies = 0;
         foreach (ZombieEnemy_DamageReceiver enemy in enemyContainer.GetComponentsInChildren<ZombieEnemy_DamageReceiver>())
@@ -74,28 +77,32 @@ public class GameController : MonoBehaviour
         }
 
         enemyText.text = "Enemies: " + aliveEnemies;
-        roundText.text = "Round: " + enemySpawner.Round;
+        roundText.text = "Round: " + roundController.CurrentRound;
         healthText.text = "Health: " + healthController.currentHealth;
 
-        if (displayedMagAmmo != player.CurrentWeapon.currentMagAmmo || displayedTotalAmmo != player.currentTotalAmmo)
+        if (displayedMagAmmo != player.CurrentWeapon.currentMagAmmo || displayedTotalAmmo != player.CurrentWeapon.currentTotalAmmo)
         {
-            ammoText.text = "Ammo: " + player.CurrentWeapon.currentMagAmmo + "/" + player.currentTotalAmmo;
+            ammoText.text = "Ammo: " + player.CurrentWeapon.currentMagAmmo + "/" + player.CurrentWeapon.currentTotalAmmo;
             displayedMagAmmo = player.CurrentWeapon.currentMagAmmo;
-            displayedTotalAmmo = player.currentTotalAmmo;
+            displayedTotalAmmo = player.CurrentWeapon.currentTotalAmmo;
         }
 
-        m4Option.text = "M4A1\n" + "Cost: " + m4.cost;
-        m107Option.text = "M107\n" + "Cost: " + m107.cost;
-        m1911Option.text = "M1911\n" + "Cost: " + m1911.cost;
+        m4_DMG_Upgrade_Cost.text = "Damage \nCost: " + m4.dmgUpgradeCost;
+        m4_FR_Upgrade_Cost.text = "Fire Rate \nCost: " + m4.frUpgradeCost;
+        m4_MAG_Upgrade_Cost.text = "Mag Size \nCost: " + m4.magUpgradeCost;
+        m4_RS_Upgrade_Cost.text = "Reload Speed \nCost: " + m4.reloadSpeedUpgradeCost;
 
-        damageUpgradeText.text = "Damage Upgrade: " + roundMenu.baseDamageUpgrade + "\n" + "Cost: " + roundMenu.damageUpgradeCost + "\nDamage: " + player.CurrentWeapon.damage;
-        rofUpgradeText.text = "Fire Rate Upgrade: " + roundMenu.baseFireRateUpgrade + "\n" + "Cost: " + roundMenu.fireRateUpgradeCost + "\nFire Rate: " + player.CurrentWeapon.fireRate;
-        magUpgradeText.text = "Mag Upgrade :" + roundMenu.baseMagUpgrade + "\n" + "Cost: " + roundMenu.magUpgradeCost + "\nMag Size: " + player.CurrentWeapon.magSize;
-        healthUpgradeText.text = "Health Upgrade :" + roundMenu.baseHealthUpgrade + "\n" + "Cost: " + roundMenu.healthUpgradeCost + "\nHealth: " + healthController.currentHealth;
+        m1911_DMG_Upgrade_Cost.text = "Damage \nCost: " + m1911.dmgUpgradeCost;
+        m1911_FR_Upgrade_Cost.text = "Fire Rate \nCost: " + m1911.frUpgradeCost;
+        m1911_MAG_Upgrade_Cost.text = "Mag Size \nCost: " + m1911.magUpgradeCost;
+        m1911_RS_Upgrade_Cost.text = "Reload Speed \nCost: " + m1911.reloadSpeedUpgradeCost;
 
-        if (Input.GetKeyDown("u"))
-        {
-            roundMenu.Pause();
-        }
+        m107_DMG_Upgrade_Cost.text = "Damage \nCost: " + m107.dmgUpgradeCost;
+        m107_FR_Upgrade_Cost.text = "Fire Rate \nCost: " + m107.frUpgradeCost;
+        m107_MAG_Upgrade_Cost.text = "Mag Size \nCost: " + m107.magUpgradeCost;
+        m107_RS_Upgrade_Cost.text = "Reload Speed \nCost: " + m107.reloadSpeedUpgradeCost;
+
+        ammoCost.text = "Refill Ammo \nCost: " + player.CurrentWeapon.ammoCost;
+        healthCost.text = "Refill Health \nCost: " + healthController.healthCost;
     }
 }

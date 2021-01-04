@@ -39,9 +39,9 @@ public class ZombieEnemy_CombatController : MonoBehaviour
     IEnumerator Attack()
     {
         canAttack = false;
-        agent.isStopped = true;
+        //agent.isStopped = true;
         
-        movementController.canMove = false;
+        //movementController.canMove = false;
         animator.SetTrigger("Attack");
 
         currentClipInfo = this.animator.GetCurrentAnimatorClipInfo(0);

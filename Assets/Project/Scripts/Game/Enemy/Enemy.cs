@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
 
 
     [Header("Requirements")]
-    public EnemySpawner spawner;
+    public RoundController roundController;
     public Player player;
     public Animator animator;
     public AmmoCrate ammoCrate;
@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
 
-        spawner = GameObject.Find("Enemy Spawner").GetComponent<EnemySpawner>();
+        roundController = GameObject.Find("RoundController").GetComponent<RoundController>();
         player = GameObject.Find("Player").GetComponent<Player>();
         agent = GetComponent<NavMeshAgent>();
         hurtBox = GetComponent<BoxCollider>();
@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour
         audio = this.GetComponent<AudioSource>();
         r = Random.Range(1, 101);
 
-        for (int i = 0; i < spawner.Round; i++)
+        for (int i = 0; i < roundController.CurrentRound; i++)
         {
             currentHealth += baseHealth;
             currentDamage += baseDamage;
@@ -76,7 +76,7 @@ public class Enemy : MonoBehaviour
 
 
 
-    void OnTriggerEnter(Collider otherCollider)
+    /*void OnTriggerEnter(Collider otherCollider)
     {
         if (otherCollider.GetComponent<Bullets>() != null)
         {
@@ -97,9 +97,9 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
-    IEnumerator OnKill()
+    /*IEnumerator OnKill()
     {
         GetComponent<CapsuleCollider>().enabled = false;
         animator.SetTrigger("Dead");
@@ -108,13 +108,8 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(despawnTimer);
 
-        if (r <= ammoSpawnChance)
-        {
-            Instantiate(ammoCrate , this.transform.position, this.transform.rotation);
-        }
-
         Destroy(gameObject);
-    }
+    }*/
 
     public void FootR()
     {

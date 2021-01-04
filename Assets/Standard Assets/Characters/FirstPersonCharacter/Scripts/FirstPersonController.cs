@@ -29,6 +29,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
+        [Header("Additions")]
+        public float slopeRayHeight;
+        public float steepSlopeAngle;
+        public float slopeThreshold;
+
+
         private Camera m_Camera;
         private bool m_Jump;
         private float m_YRotation;
@@ -66,7 +72,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                //m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -105,10 +111,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
                                m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
-
-            m_MoveDir.x = desiredMove.x*speed;
-            m_MoveDir.z = desiredMove.z*speed;
-
+            //Test Section
+            Debug.Log("Moveable terrain = " + checkMoveableTerrain(transform.position, desiredMove, 2));
+            if (checkMoveableTerrain(transform.position, desiredMove, 3))
+            {
+                //Debug.Log("Movable terrain gave true");
+                m_MoveDir.x = desiredMove.x * speed;
+                m_MoveDir.z = desiredMove.z * speed;
+                //GetComponent<Rigidbody>().velocity = desiredMove;
+            }
 
             if (m_CharacterController.isGrounded)
             {
@@ -132,6 +143,41 @@ namespace UnityStandardAssets.Characters.FirstPerson
             UpdateCameraPosition(speed);
 
             m_MouseLook.UpdateCursorLock();
+        }
+
+        private bool checkMoveableTerrain(Vector3 position, Vector3 desiredDirection, float distance)
+        {
+            Ray myRay = new Ray(position, desiredDirection); // cast a Ray from the position of our gameObject into our desired direction. Add the slopeRayHeight to the Y parameter.
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(myRay, out hit, distance))
+            {
+                if (hit.collider.gameObject.tag == "Ground") // Our Ray has hit the ground
+                {
+                    float slopeAngle = Mathf.Deg2Rad * Vector3.Angle(Vector3.up, hit.normal); // Here we get the angle between the Up Vector and the normal of the wall we are checking against: 90 for straight up walls, 0 for flat ground.
+
+                    float radius = Mathf.Abs(slopeRayHeight / Mathf.Sin(slopeAngle)); // slopeRayHeight is the Y offset from the ground you wish to cast your ray from.
+
+                    if (slopeAngle >= steepSlopeAngle * Mathf.Deg2Rad) //You can set "steepSlopeAngle" to any angle you wish.
+                    {
+                        if (hit.distance - GetComponent<CapsuleCollider>().radius > Mathf.Abs(Mathf.Cos(slopeAngle) * radius) + slopeThreshold) // Magical Cosine. This is how we find out how near we are to the slope / if we are standing on the slope. as we are casting from the center of the collider we have to remove the collider radius.
+                                                                                                                         // The slopeThreshold helps kills some bugs. ( e.g. cosine being 0 at 90° walls) 0.01 was a good number for me here
+                        {
+                            return true; // return true if we are still far away from the slope
+                        }
+
+                        return false; // return false if we are very near / on the slope && the slope is steep
+                    }
+
+                    return true; // return true if the slope is not steep
+
+                }
+                else
+                    return false;
+            }
+            else
+                return true;
         }
 
 

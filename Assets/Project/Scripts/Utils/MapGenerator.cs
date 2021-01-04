@@ -53,6 +53,7 @@ public class MapGenerator : MonoBehaviour
             else
             {
                 GameObject temp = Instantiate(longHallway, snapPoint.position, snapPoint.rotation);
+                CheckNextSpace(snapPoint);
                 temp.transform.parent = controller.transform;
                 distance += 2;
                 AddRoom(RoomType.Middle, temp.transform.GetChild(0));
@@ -142,10 +143,15 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    public bool CheckNextSpace()
+    public bool CheckNextSpace(Transform snapPoint)
     {
 
+        RaycastHit hit;
 
+        if (Physics.Raycast(snapPoint.transform.position, snapPoint.transform.forward, out hit))
+        {
+            print(hit.transform.name);
+        }
 
         return true;
     }

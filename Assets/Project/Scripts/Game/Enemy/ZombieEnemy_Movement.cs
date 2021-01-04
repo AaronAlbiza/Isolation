@@ -9,7 +9,8 @@ public class ZombieEnemy_Movement : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
     private Rigidbody rigidBody;
-    
+
+    public int stoppingDistance;
     public int animCooldown = 0;
     public bool canMove = true;
 
@@ -23,9 +24,20 @@ public class ZombieEnemy_Movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Move();
+        var distance = Vector3.Distance(player.transform.position, transform.position);
+        if (distance > stoppingDistance)
+        {
+            agent.isStopped = false;
+            rigidBody.constraints = RigidbodyConstraints.None;
+            Move();
+        }
+        else
+        {
+            agent.isStopped = true;
+            rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        }
     }
 
     private void Move()
@@ -34,5 +46,21 @@ public class ZombieEnemy_Movement : MonoBehaviour
 
         float speed = this.agent.velocity.magnitude;
         this.animator.SetFloat("WalkSpeed", speed);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            rigidBody.constraints = RigidbodyConstraints.None;
+        }
     }
 }

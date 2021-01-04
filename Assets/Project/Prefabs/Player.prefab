@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 5569052551374933847}
   - component: {fileID: 5569052551371879895}
   - component: {fileID: 5569052551907343614}
+  - component: {fileID: 3768365085706437617}
   - component: {fileID: 355922919}
   - component: {fileID: 1890316422085467124}
   - component: {fileID: -3804954138304096257}
@@ -399,6 +400,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   m_JumpSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
   m_LandSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
+  slopeRayHeight: 0
+  steepSlopeAngle: 0
+  slopeThreshold: 0
 --- !u!54 &5569052551374933847
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -523,9 +527,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 518b864df67561d40bb863fa06a36a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTotalAmmo: 0
   points: 0
   canShoot: 0
+  inventory: []
+  weapons: []
+--- !u!136 &3768365085706437617
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5569052551379971127}
+  m_Material: {fileID: 13400000, guid: c2815a7ab32e42c4bb42f59caacb8ec1, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &355922919
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -535,7 +554,7 @@ BoxCollider:
   m_GameObject: {fileID: 5569052551379971127}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -552,6 +571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitDuration: 0.5
+  m_AudioSource: {fileID: 0}
 --- !u!114 &-3804954138304096257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,6 +586,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 0
   totalHealth: 100
+  healthCost: 0
+  player: {fileID: 0}
 --- !u!1 &5569052551642947378
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,6 +749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  range: 100
   bulletSpeed: 100
   reloadSpeed: 3
   automatic: 1
@@ -734,10 +757,23 @@ MonoBehaviour:
   maxAmmo: 200
   fireRate: 10
   cost: 500
+  dmgUpgradeAmount: 0
+  frUpgradeAmount: 0
+  magUpgradeAmount: 0
+  reloadSpeedUpgradeAmount: 0
+  dmgUpgradeCost: 0
+  frUpgradeCost: 0
+  magUpgradeCost: 0
+  reloadSpeedUpgradeCost: 0
+  ammoCost: 0
+  currentTotalAmmo: 0
+  scalingCost: 0
   gunBarrel: {fileID: 0}
   player: {fileID: 5569052551907343614}
   m_animator: {fileID: 2043126798}
   muzzleFlash: {fileID: 0}
+  fpsCam: {fileID: 0}
+  roundMenu: {fileID: 0}
   currentMagAmmo: 0
 --- !u!82 &1991711761
 AudioSource:
@@ -867,6 +903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  range: 100
   bulletSpeed: 100
   reloadSpeed: 3
   automatic: 0
@@ -874,10 +911,23 @@ MonoBehaviour:
   maxAmmo: 200
   fireRate: 10
   cost: 100
+  dmgUpgradeAmount: 0
+  frUpgradeAmount: 0
+  magUpgradeAmount: 0
+  reloadSpeedUpgradeAmount: 0
+  dmgUpgradeCost: 0
+  frUpgradeCost: 0
+  magUpgradeCost: 0
+  reloadSpeedUpgradeCost: 0
+  ammoCost: 0
+  currentTotalAmmo: 0
+  scalingCost: 0
   gunBarrel: {fileID: 257611804}
   player: {fileID: 5569052551907343614}
   m_animator: {fileID: 1991711760}
   muzzleFlash: {fileID: 1786631798004983674}
+  fpsCam: {fileID: 0}
+  roundMenu: {fileID: 0}
   currentMagAmmo: 0
 --- !u!82 &1388252202
 AudioSource:
@@ -1007,6 +1057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 50
+  range: 100
   bulletSpeed: 150
   reloadSpeed: 5
   automatic: 0
@@ -1014,10 +1065,23 @@ MonoBehaviour:
   maxAmmo: 100
   fireRate: 1
   cost: 1000
+  dmgUpgradeAmount: 0
+  frUpgradeAmount: 0
+  magUpgradeAmount: 0
+  reloadSpeedUpgradeAmount: 0
+  dmgUpgradeCost: 0
+  frUpgradeCost: 0
+  magUpgradeCost: 0
+  reloadSpeedUpgradeCost: 0
+  ammoCost: 0
+  currentTotalAmmo: 0
+  scalingCost: 0
   gunBarrel: {fileID: 2122807962310050038}
   player: {fileID: 5569052551907343614}
   m_animator: {fileID: 1388252203}
   muzzleFlash: {fileID: 3482849887823561014}
+  fpsCam: {fileID: 0}
+  roundMenu: {fileID: 0}
   currentMagAmmo: 0
 --- !u!1 &5626569310340145959
 GameObject:
@@ -1354,15 +1418,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f1a7354265853f44b0ed5e2e43676ad, type: 3}
---- !u!4 &5573388917155874393 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4952727429218122, guid: 6f1a7354265853f44b0ed5e2e43676ad,
-    type: 3}
-  m_PrefabInstance: {fileID: 5569052552600402195}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5570735987283502669 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1694449805434718, guid: 6f1a7354265853f44b0ed5e2e43676ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 5569052552600402195}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5573388917155874393 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4952727429218122, guid: 6f1a7354265853f44b0ed5e2e43676ad,
     type: 3}
   m_PrefabInstance: {fileID: 5569052552600402195}
   m_PrefabAsset: {fileID: 0}
@@ -1439,15 +1503,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7359baf27e84aa44cafac3788c8be0f1, type: 3}
---- !u!1 &5570882130649884183 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1829597508155286, guid: 7359baf27e84aa44cafac3788c8be0f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 5569052552906609025}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5568517172015031207 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4053999043310118, guid: 7359baf27e84aa44cafac3788c8be0f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5569052552906609025}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5570882130649884183 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1829597508155286, guid: 7359baf27e84aa44cafac3788c8be0f1,
     type: 3}
   m_PrefabInstance: {fileID: 5569052552906609025}
   m_PrefabAsset: {fileID: 0}
@@ -1524,15 +1588,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 689946d975a0e55449b1e7ae41933e73, type: 3}
---- !u!1 &5569483404820849545 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1117582899397640, guid: 689946d975a0e55449b1e7ae41933e73,
-    type: 3}
-  m_PrefabInstance: {fileID: 5569052553141708673}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5568535775586912921 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4035219142733080, guid: 689946d975a0e55449b1e7ae41933e73,
+    type: 3}
+  m_PrefabInstance: {fileID: 5569052553141708673}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5569483404820849545 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1117582899397640, guid: 689946d975a0e55449b1e7ae41933e73,
     type: 3}
   m_PrefabInstance: {fileID: 5569052553141708673}
   m_PrefabAsset: {fileID: 0}

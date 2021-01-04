@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviour
 {
 
     [Header("Stats")]
@@ -15,6 +15,17 @@ public class Weapon : MonoBehaviour
     public int maxAmmo;
     public float fireRate;
     public int cost;
+    public int dmgUpgradeAmount;
+    public float frUpgradeAmount;
+    public int magUpgradeAmount;
+    public float reloadSpeedUpgradeAmount;
+    public int dmgUpgradeCost;
+    public int frUpgradeCost;
+    public int magUpgradeCost;
+    public int reloadSpeedUpgradeCost;
+    public int ammoCost;
+    public int currentTotalAmmo;
+    public int scalingCost;
 
     [Header("Required")]
     public GameObject gunBarrel;
@@ -32,13 +43,10 @@ public class Weapon : MonoBehaviour
 
     public AudioSource Audio { set { audio = value; } }
 
-    void Start()
-    {
-        m_animator.SetFloat("ReloadSpeed", reloadSpeed);
-    }
-
     void Update()
     {
+        m_animator.SetFloat("ReloadSpeed", reloadSpeed);
+
         if (!roundMenu.gamePaused)
         {
             if (reloading)
@@ -83,7 +91,7 @@ public class Weapon : MonoBehaviour
 
             if (Input.GetKeyDown("r") && !reloading)
             {
-                if (player.currentTotalAmmo > 0 && currentMagAmmo < magSize)
+                if (currentTotalAmmo > 0 && currentMagAmmo < magSize)
                 {
                     reloading = true;
                     m_animator.SetTrigger("Reload");
@@ -95,16 +103,16 @@ public class Weapon : MonoBehaviour
     public void Reload()
     {
         int missingAmmo = magSize - currentMagAmmo;
-        if (player.currentTotalAmmo < missingAmmo)
+        if (currentTotalAmmo < missingAmmo)
         {
-            currentMagAmmo += player.currentTotalAmmo;
-            player.currentTotalAmmo = 0;
+            currentMagAmmo += currentTotalAmmo;
+            currentTotalAmmo = 0;
         }
 
         else
         {
             currentMagAmmo += missingAmmo;
-            player.currentTotalAmmo -= missingAmmo;
+            currentTotalAmmo -= missingAmmo;
         }
     } 
 
@@ -114,14 +122,50 @@ public class Weapon : MonoBehaviour
 
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
-            
-            Debug.Log(hit.transform.name);
-
             if (hit.transform.tag == "Enemy")
             {
-                Debug.Log(damage);
                 hit.transform.GetComponent<ZombieEnemy_DamageReceiver>().Gethit(damage);
             }
+        }
+    }
+
+    public void DamageUpgrade()
+    {
+        if (player.points >= dmgUpgradeCost)
+        {
+            this.damage += dmgUpgradeAmount;
+            player.points -= dmgUpgradeCost;
+            dmgUpgradeCost += scalingCost;
+        }
+    }
+
+    public void FireRateUpgrade()
+    {
+        if (player.points >= frUpgradeCost)
+        {
+            this.fireRate += frUpgradeAmount;
+            player.points -= frUpgradeCost;
+            frUpgradeCost += scalingCost;
+        }
+    }
+
+    public void MagSizeUpgrade()
+    {
+        if (player.points >= magUpgradeCost)
+        {
+            this.magSize += magUpgradeAmount;
+            player.points -= magUpgradeCost;
+            magUpgradeCost += scalingCost;
+        }
+    }
+
+    public void ReloadSpeedUpgrade()
+    {
+        if (player.points >= reloadSpeedUpgradeCost)
+        {
+            this.reloadSpeed += reloadSpeedUpgradeAmount;
+            player.points -= reloadSpeedUpgradeCost;
+            reloadSpeedUpgradeCost += scalingCost;
         }
     }
 }

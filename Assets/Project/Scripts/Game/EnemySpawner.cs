@@ -18,16 +18,13 @@ public class EnemySpawner : MonoBehaviour
     private int totalEnemies;
     public int TotalEnemies { get{ return totalEnemies; } }
 
-    private int round = 1;
-    public int Round { get{ return round; } }
-
     public int spawnedEnemies = 0;
 
     void LateUpdate()
     {
-        if (roundStart)
+        if (roundStart && !roundController.betweenRounds)
         {
-            totalEnemies = enemyModifier * round;
+            totalEnemies = enemyModifier * roundController.CurrentRound;
             StartCoroutine(SpawnEnemies());
             roundStart = false;
         }
@@ -41,7 +38,7 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        if (aliveEnemies == 0 && spawnedEnemies == totalEnemies)
+        if (aliveEnemies == 0 && spawnedEnemies == totalEnemies && !roundController.betweenRounds)
         {
             roundController.NextRound();
         }
@@ -49,7 +46,7 @@ public class EnemySpawner : MonoBehaviour
 
     public IEnumerator SpawnEnemies()
     {
-        while (spawnedEnemies < TotalEnemies)
+        while (spawnedEnemies < totalEnemies)
         {
             foreach (SpawnPoint spawnPoint in controller.GetComponentsInChildren<SpawnPoint>())
             {
@@ -63,6 +60,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void NewRound(int round)
     {
+        roundController.betweenRounds = false;
         roundStart = true;
         spawnedEnemies = 0;
     }
