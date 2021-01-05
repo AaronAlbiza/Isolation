@@ -105,10 +105,22 @@ namespace UnityStandardAssets.Characters.FirstPerson
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
                                m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
+<<<<<<< Updated upstream
 
             m_MoveDir.x = desiredMove.x*speed;
             m_MoveDir.z = desiredMove.z*speed;
 
+=======
+            //Test Section
+            Debug.Log("Moveable terrain = " + checkMoveableTerrain(transform.position, desiredMove, 2));
+            //if (checkMoveableTerrain(transform.position, desiredMove, 3))
+            //{
+                //Debug.Log("Movable terrain gave true");
+                m_MoveDir.x = desiredMove.x * speed;
+                m_MoveDir.z = desiredMove.z * speed;
+                //GetComponent<Rigidbody>().velocity = desiredMove;
+            //}
+>>>>>>> Stashed changes
 
             if (m_CharacterController.isGrounded)
             {

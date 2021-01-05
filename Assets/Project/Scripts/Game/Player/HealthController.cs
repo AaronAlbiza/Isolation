@@ -18,4 +18,17 @@ public class HealthController : MonoBehaviour
     {
         currentHealth -= damage;
     }
+<<<<<<< Updated upstream
+=======
+
+    public void BuyHealth()
+    {
+        if (player.points >= healthCost)
+        {
+            currentHealth = totalHealth;
+            player.points -= healthCost;
+            healthCost = healthCost * 2;
+        }
+    }
+>>>>>>> Stashed changes
 }

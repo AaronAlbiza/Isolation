@@ -9,7 +9,13 @@ public class ZombieEnemy_Movement : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
     private Rigidbody rigidBody;
+<<<<<<< Updated upstream
     
+=======
+
+    public int stoppingDistance;
+    public float rotationSpeed = 10f;
+>>>>>>> Stashed changes
     public int animCooldown = 0;
     public bool canMove = true;
 
@@ -25,7 +31,26 @@ public class ZombieEnemy_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+<<<<<<< Updated upstream
         Move();
+=======
+        Vector3 direction = (player.transform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+
+        var distance = Vector3.Distance(player.transform.position, transform.position);
+        if (distance > stoppingDistance)
+        {
+            agent.isStopped = false;
+            rigidBody.constraints = RigidbodyConstraints.None;
+            Move();
+        }
+        else
+        {
+            agent.isStopped = true;
+            rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+>>>>>>> Stashed changes
     }
 
     private void Move()
